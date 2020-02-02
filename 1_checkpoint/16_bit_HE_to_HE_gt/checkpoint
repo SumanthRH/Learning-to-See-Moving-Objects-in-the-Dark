@@ -1,0 +1,5 @@
+model_checkpoint_path: "model.ckpt"
+all_model_checkpoint_paths: "../../2_result/16_bit_HE_to_HE_gt/0035/model.ckpt"
+all_model_checkpoint_paths: "../../2_result/16_bit_HE_to_HE_gt/0040/model.ckpt"
+all_model_checkpoint_paths: "../../2_result/16_bit_HE_to_HE_gt/0045/model.ckpt"
+all_model_checkpoint_paths: "model.ckpt"

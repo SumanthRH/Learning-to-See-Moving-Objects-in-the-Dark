@@ -78,7 +78,7 @@ def network(input, depth=3, channel=32, prefix=''):
 
     out = tf.concat([tf.expand_dims(tf.depth_to_space(conv10[:, i, :, :, :], 2), axis=1) for i in range(conv10.shape[1])], axis=1)
     if DEBUG:
-        print '[DEBUG] (network.py) conv10.shape, out.shape:', conv10.shape, out.shape
+        print('[DEBUG] (network.py) conv10.shape, out.shape:', conv10.shape, out.shape)
 
     return out
 
@@ -99,10 +99,10 @@ def main():
     vid = np.expand_dims(np.float32(np.minimum((vid[:16, :256, :256, :] / vid.mean() / 5), 1.0)), axis=0)
     sess.run(tf.global_variables_initializer())
     for i, out in enumerate(out_image):
-        print out.shape
+        print(out.shape)
         output = sess.run(out, feed_dict={in_image: vid})
         output = (np.minimum(output, 1.0) * 255).astype('uint8')
-        print output[0].shape
+        print(output[0].shape)
         vwrite(str(i) + '.mp4', output[0])
 
 

@@ -69,7 +69,7 @@ def process_video(sess, in_image, out_image, in_file, raw, out_file=None):
     input_patch = raw
 
     if DEBUG:
-        print '[DEBUG] (begining of preocess_video) input_patch.shape:', input_patch.shape
+        print('[DEBUG] (begining of preocess_video) input_patch.shape:', input_patch.shape)
 
     i = 0
     j = 0
@@ -78,7 +78,7 @@ def process_video(sess, in_image, out_image, in_file, raw, out_file=None):
     output = np.zeros([input_patch.shape[0], input_patch.shape[1] * 2, input_patch.shape[2] * 2, 3], dtype='uint16')
     i_range, j_range, k_range = input_patch.shape[0:3]
     weights = np.zeros(output.shape, dtype='uint8')
-    
+    print(output.shape,weights.shape)
     # 16 bit
     max_val = 65535.0
     scaling_factor = max_val
@@ -94,7 +94,7 @@ def process_video(sess, in_image, out_image, in_file, raw, out_file=None):
                 break
             i = i_range - TEST_CROP_FRAME
             done = True
-        print '[INFO] processing frame', i
+        print('[INFO] processing frame', i)
         j = 0
         while j < j_range:
             k = 0
@@ -103,10 +103,10 @@ def process_video(sess, in_image, out_image, in_file, raw, out_file=None):
                 network_input = np.float32(np.expand_dims(temp, axis=0))
                 network_input = np.minimum(network_input / scaling_factor, 1.0)
                 if DEBUG:
-                    print '[DEBUG] network_input.shape:', network_input.shape
+                    print('[DEBUG] network_input.shape:', network_input.shape)
                 network_output = sess.run(out_image, feed_dict={in_image: network_input})
                 if DEBUG:
-                    print '[DEBUG] network_output.shape:', network_output.shape
+                    print('[DEBUG] network_output.shape:', network_output.shape)
 
                 if i + TEST_CROP_FRAME > i_range:
                     temp = network_output[0, :i_range - i, :, :, :]
@@ -118,18 +118,20 @@ def process_video(sess, in_image, out_image, in_file, raw, out_file=None):
                 k += int(TEST_CROP_WIDTH * step)
             j += int(TEST_CROP_HEIGHT * step)
         i += int(TEST_CROP_FRAME * step)
-
+    if weights.any()==0:
+        print("some weight is zero")
+    
     output = (output / weights).astype('uint8')
 
     if out_file is None:
         out_file = os.path.basename(in_file)[:-4] + '.mp4'
         if DEBUG:
-            print '[DEBUG] out_file:', out_file
-    print '[PROCESS] Processing done. Saving...',
+            print('[DEBUG] out_file:', out_file)
+    print('[PROCESS] Processing done. Saving...')
     t0 = time.time()
     vwrite(TEST_RESULT_DIR + out_file, output)
     t1 = time.time()
-    print 'done. ({:.3f}s)'.format(t1 - t0)
+    print('done. ({:.3f}s)'.format(t1 - t0))
 
 
 def main():
@@ -152,23 +154,23 @@ def main():
         # raw = vread(file0)
         raw = np.load(file0)
         if raw.shape[0] > MAX_FRAME:
-            print 'Video with shape', raw.shape, 'is too large. Splitted.'
+            print('Video with shape', raw.shape, 'is too large. Splitted.')
             count = 0
             begin_frame = 0
             while begin_frame < raw.shape[0]:
                 t1 = time.time()
-                print 'processing segment %d ...' % (count + 1),
+                print('processing segment %d ...' % (count + 1))
                 new_filename = '.'.join(file0.split('.')[:-1] + [str(count)] + file0.split('.')[-1::])
                 process_video(sess, in_image, out_image, new_filename, raw[begin_frame: begin_frame + MAX_FRAME, :, :, :])
                 count += 1
                 begin_frame += MAX_FRAME
-                print '\t{}s'.format(time.time() - t1)
+                print('\t{}s'.format(time.time() - t1))
         else:
             process_video(sess, in_image, out_image, file0, raw, out_file=train_ids[i] + '.mp4')
-        print train_ids[i], '\t{}s'.format(time.time() - t0)
+        print(train_ids[i], '\t{}s'.format(time.time() - t0))
 
 
 if __name__ == '__main__':
     t0 = time.time()
     main()
-    print 'total time: {}s'.format(time.time() - t0)
+    print('total time: {}s'.format(time.time() - t0))

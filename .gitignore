@@ -3,6 +3,18 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Images and Videos
+*.png 
+*.mp4 
+*.ARW
+*.npy
+
+# VIm swaps 
+*.swp
+
+# model checkpoints 
+*.ckpt.*
+
 # C extensions
 *.so
 

@@ -41,7 +41,7 @@ DECAY_LR = 1e-5
 DECAY_EPOCH = 30
 
 # test.py ================================================================
-TEST_CROP_FRAME = 32
+TEST_CROP_FRAME = 16
 TEST_CROP_HEIGHT = 512
 TEST_CROP_WIDTH= 512
 

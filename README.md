@@ -19,5 +19,3 @@ python download_dataset.py
 ```Shell
 python test.py
 ```
-
-### More details and complete dataset will be updated soon.
